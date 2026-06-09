@@ -19,7 +19,7 @@ It highlights DOM elements like an inspector, then copies a structured payload:
 ## Install
 
 ```sh
-bun add -d @shotomatic/pinpoint
+bun add -d @wyverselabs/pinpoint
 ```
 
 Pinpoint expects the host app to provide compatible peers:
@@ -33,7 +33,7 @@ Pinpoint expects the host app to provide compatible peers:
 Add the source metadata plugin to the renderer build in development:
 
 ```ts
-import { pinpointSourceMetadataPlugin } from "@shotomatic/pinpoint/vite";
+import { pinpointSourceMetadataPlugin } from "@wyverselabs/pinpoint/vite";
 
 export default defineConfig({
   plugins: [
@@ -55,7 +55,7 @@ import {
   DEFAULT_PINPOINT_ACCELERATOR,
   registerElectronPinpointMain,
   toggleElectronPinpointForFocusedWindow,
-} from "@shotomatic/pinpoint/electron/main";
+} from "@wyverselabs/pinpoint/electron/main";
 
 yield* registerElectronPinpointMain();
 yield* shortcutService.registerScoped(DEFAULT_PINPOINT_ACCELERATOR, () => {
@@ -66,7 +66,7 @@ yield* shortcutService.registerScoped(DEFAULT_PINPOINT_ACCELERATOR, () => {
 Expose the preload bridge:
 
 ```ts
-import { exposeElectronPinpointPreload } from "@shotomatic/pinpoint/electron/preload";
+import { exposeElectronPinpointPreload } from "@wyverselabs/pinpoint/electron/preload";
 
 if (process.env.NODE_ENV === "development") {
   exposeElectronPinpointPreload();
@@ -76,7 +76,7 @@ if (process.env.NODE_ENV === "development") {
 Install the renderer listener in each window:
 
 ```ts
-import { installElectronPinpoint } from "@shotomatic/pinpoint/electron/renderer";
+import { installElectronPinpoint } from "@wyverselabs/pinpoint/electron/renderer";
 
 if (import.meta.env.DEV) {
   installElectronPinpoint({ windowLabel: "main" });
@@ -88,7 +88,7 @@ if (import.meta.env.DEV) {
 The browser adapter is intentionally small for now:
 
 ```ts
-import { installBrowserPinpoint } from "@shotomatic/pinpoint/browser-extension";
+import { installBrowserPinpoint } from "@wyverselabs/pinpoint/browser-extension";
 
 installBrowserPinpoint();
 ```

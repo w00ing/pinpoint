@@ -1,5 +1,5 @@
 {
-  "name": "@shotomatic/pinpoint",
+  "name": "@wyverselabs/pinpoint",
   "version": "0.1.0",
   "description": "Pin rendered React and Electron UI to the source context an AI needs.",
   "license": "MIT",

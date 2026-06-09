@@ -3,7 +3,7 @@
   "configVersion": 1,
   "workspaces": {
     "": {
-      "name": "@shotomatic/pinpoint",
+      "name": "@wyverselabs/pinpoint",
       "devDependencies": {
         "@types/node": "^24.0.0",
         "effect": ">=3.0.0",
