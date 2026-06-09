@@ -1,0 +1,72 @@
+{
+  "name": "@shotomatic/pinpoint",
+  "version": "0.1.0",
+  "description": "Pin rendered React and Electron UI to the source context an AI needs.",
+  "license": "MIT",
+  "homepage": "https://github.com/w00ing/pinpoint",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/w00ing/pinpoint.git"
+  },
+  "type": "module",
+  "sideEffects": false,
+  "files": [
+    "dist",
+    "README.md",
+    "package.json"
+  ],
+  "main": "./dist/core/index.js",
+  "types": "./dist/core/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/core/index.d.ts",
+      "import": "./dist/core/index.js"
+    },
+    "./core": {
+      "types": "./dist/core/index.d.ts",
+      "import": "./dist/core/index.js"
+    },
+    "./electron/main": {
+      "types": "./dist/integrations/electron/main.d.ts",
+      "import": "./dist/integrations/electron/main.js"
+    },
+    "./electron/preload": {
+      "types": "./dist/integrations/electron/preload.d.ts",
+      "import": "./dist/integrations/electron/preload.js"
+    },
+    "./electron/renderer": {
+      "types": "./dist/integrations/electron/renderer.d.ts",
+      "import": "./dist/integrations/electron/renderer.js"
+    },
+    "./browser-extension": {
+      "types": "./dist/integrations/browser-extension/contentScript.d.ts",
+      "import": "./dist/integrations/browser-extension/contentScript.js"
+    },
+    "./vite": {
+      "types": "./dist/vite/sourceMetadataPlugin.d.ts",
+      "import": "./dist/vite/sourceMetadataPlugin.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "scripts": {
+    "clean": "rm -rf dist *.tgz",
+    "build": "bun run clean && tsc -p tsconfig.build.json",
+    "pack": "bun run build && npm pack",
+    "pack:dry": "bun run build && npm pack --dry-run"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "peerDependencies": {
+    "effect": ">=3.0.0",
+    "electron": ">=35.0.0",
+    "vite": ">=6.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "effect": ">=3.0.0",
+    "electron": ">=35.0.0",
+    "typescript": "^5.8.2",
+    "vite": ">=6.0.0"
+  }
+}
