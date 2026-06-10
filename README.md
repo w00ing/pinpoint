@@ -33,11 +33,11 @@ Pinpoint expects the host app to provide compatible peers:
 Add the source metadata plugin to the renderer build in development:
 
 ```ts
-import { pinpointSourceMetadataPlugin } from "@wyverselabs/pinpoint/vite";
+import pinpoint from "@wyverselabs/pinpoint/vite";
 
 export default defineConfig({
   plugins: [
-    pinpointSourceMetadataPlugin({
+    pinpoint({
       root: __dirname,
     }),
   ],

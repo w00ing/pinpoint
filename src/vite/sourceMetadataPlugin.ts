@@ -198,7 +198,7 @@ const transformJsxSourceMetadata = (code: string, id: string, root: string) => {
   return edits.length > 0 ? applyEdits(code, edits) : code;
 };
 
-export const pinpointSourceMetadataPlugin = (options: SourceMetadataPluginOptions = {}): Plugin => {
+const pinpoint = (options: SourceMetadataPluginOptions = {}): Plugin => {
   let root = options.root ? path.resolve(options.root) : process.cwd();
   let enabled = options.enabled ?? true;
 
@@ -222,3 +222,6 @@ export const pinpointSourceMetadataPlugin = (options: SourceMetadataPluginOption
     },
   };
 };
+
+export { pinpoint, pinpoint as pinpointSourceMetadataPlugin };
+export default pinpoint;

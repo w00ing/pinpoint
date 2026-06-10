@@ -1,6 +1,6 @@
 {
   "name": "@wyverselabs/pinpoint",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Pin rendered React and Electron UI to the source context an AI needs.",
   "license": "MIT",
   "homepage": "https://github.com/w00ing/pinpoint",
