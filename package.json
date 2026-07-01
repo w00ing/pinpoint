@@ -1,6 +1,6 @@
 {
   "name": "@wyverselabs/pinpoint",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "Pin rendered React and Electron UI to the source context an AI needs.",
   "license": "MIT",
   "homepage": "https://github.com/w00ing/pinpoint",
@@ -38,10 +38,6 @@
       "types": "./dist/integrations/electron/renderer.d.ts",
       "import": "./dist/integrations/electron/renderer.js"
     },
-    "./browser-extension": {
-      "types": "./dist/integrations/browser-extension/contentScript.d.ts",
-      "import": "./dist/integrations/browser-extension/contentScript.js"
-    },
     "./vite": {
       "types": "./dist/vite/sourceMetadataPlugin.d.ts",
       "import": "./dist/vite/sourceMetadataPlugin.js"
@@ -50,23 +46,33 @@
   },
   "scripts": {
     "clean": "rm -rf dist *.tgz",
+    "test": "vitest run",
     "build": "bun run clean && tsc -p tsconfig.build.json",
     "pack": "bun run build && npm pack",
-    "pack:dry": "bun run build && npm pack --dry-run"
+    "pack:dry": "bun run build && npm pack --dry-run",
+    "release:check": "bun run test && bun run build && npm pack --dry-run",
+    "prepublishOnly": "bun run release:check"
   },
   "publishConfig": {
     "access": "public"
   },
   "peerDependencies": {
-    "effect": ">=3.0.0",
     "electron": ">=35.0.0",
     "vite": ">=6.0.0"
   },
+  "peerDependenciesMeta": {
+    "electron": {
+      "optional": true
+    },
+    "vite": {
+      "optional": true
+    }
+  },
   "devDependencies": {
     "@types/node": "^24.0.0",
-    "effect": ">=3.0.0",
     "electron": ">=35.0.0",
     "typescript": "^5.8.2",
-    "vite": ">=6.0.0"
+    "vite": ">=6.0.0",
+    "vitest": "^4.1.9"
   }
 }

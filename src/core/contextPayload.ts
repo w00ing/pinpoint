@@ -9,6 +9,7 @@ import {
 import type { ElementContext } from "./types.js";
 
 const PAYLOAD_TAG = "pinpoint-selection";
+const TARGET_NAME_MAX_LENGTH = 80;
 
 const truncate = (value: string, maxLength: number) => {
   const normalized = value.replace(/\s+/g, " ").trim();
@@ -76,6 +77,16 @@ const getComputedStyleSummary = (element: Element) => {
   };
 };
 
+const compactObject = <T extends Record<string, unknown>>(value: T) =>
+  Object.fromEntries(
+    Object.entries(value).filter(([, entry]) => {
+      if (entry === null || entry === undefined) return false;
+      if (typeof entry === "string" && entry.trim().length === 0) return false;
+      if (Array.isArray(entry) && entry.length === 0) return false;
+      return true;
+    }),
+  );
+
 export const createElementContext = (element: Element, windowLabel: string | null): ElementContext => {
   const sourceElement = findNearestSourceElement(element);
   const contextElement = sourceElement ?? element;
@@ -100,77 +111,30 @@ export const createElementContext = (element: Element, windowLabel: string | nul
   };
 };
 
-const serializeBounds = (bounds: DOMRect) => ({
-  x: Math.round(bounds.x),
-  y: Math.round(bounds.y),
-  width: Math.round(bounds.width),
-  height: Math.round(bounds.height),
-  top: Math.round(bounds.top),
-  right: Math.round(bounds.right),
-  bottom: Math.round(bounds.bottom),
-  left: Math.round(bounds.left),
-});
-
-const createAiTargetDescription = (context: ElementContext) => {
-  const label = context.accessibleName ?? context.text;
-  const name = label ? ` "${label}"` : "";
-  const slot = context.dataSlot ? ` with data-slot="${context.dataSlot}"` : "";
-  const source = formatSourceLocation(context.source) ?? formatSourceLocation(context.reactSource);
-  return `The visible ${context.tagName}${name}${slot}${source ? ` rendered from ${source}` : ""}.`;
-};
-
 export const createContextPayload = (context: ElementContext) => {
   const source = formatSourceLocation(context.source);
   const reactSource = formatSourceLocation(context.reactSource);
-  const payload = {
-    schemaVersion: 1,
+  const primarySource = source ?? reactSource;
+  const sourceKind = source ? "jsx-metadata" : reactSource ? "react-debug" : null;
+  const targetName = context.accessibleName ?? context.text;
+  const payload = compactObject({
     kind: "pinpoint.selection",
-    capturedAt: new Date().toISOString(),
-    app: {
-      name: "Shotomatic",
-      environment: "development",
-      window: context.windowLabel,
-      url: context.url,
-    },
-    target: {
-      description: createAiTargetDescription(context),
-      tagName: context.tagName,
-      text: context.text,
-      accessibleName: context.accessibleName,
+    source: primarySource
+      ? compactObject({
+          location: primarySource,
+          element: context.sourceElementName,
+          kind: sourceKind,
+        })
+      : null,
+    target: compactObject({
+      tag: context.tagName,
+      name: targetName ? truncate(targetName, TARGET_NAME_MAX_LENGTH) : null,
       role: context.role,
       id: context.id,
-      className: context.className,
-      dataSlot: context.dataSlot,
-    },
-    source: {
-      primary: source ?? reactSource,
-      jsxMetadata: context.source
-        ? {
-            ...context.source,
-            formatted: source,
-            elementName: context.sourceElementName,
-          }
-        : null,
-      reactDebug: context.reactSource
-        ? {
-            ...context.reactSource,
-            formatted: reactSource,
-          }
-        : null,
-      sourceElementName: context.sourceElementName,
-    },
-    react: {
-      ownerStack: context.reactOwnerStack,
-    },
-    dom: {
-      path: context.domPath,
-    },
-    layout: {
-      bounds: serializeBounds(context.bounds),
-    },
-    computedStyle: context.computedStyle,
-    promptHint: "Use target.description and source.primary to locate the UI element before editing.",
-  };
+      slot: context.dataSlot,
+    }),
+    window: context.windowLabel,
+  });
 
   return `<${PAYLOAD_TAG}>\n${JSON.stringify(payload, null, 2)}\n</${PAYLOAD_TAG}>`;
 };
