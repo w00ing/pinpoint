@@ -50,6 +50,36 @@ Peer dependencies are optional at package install time because each subpath has 
 - `vite` for `@wyverselabs/pinpoint/vite`
 - `electron` for `@wyverselabs/pinpoint/electron/*`
 
+## Set It Up With An AI Agent
+
+If you use Codex, Claude Code, Cursor, or another coding agent, paste this prompt from the root of your Electron app:
+
+```text
+Install and wire @wyverselabs/pinpoint in this Electron React Vite app.
+
+Goal:
+- Add Pinpoint as a development dependency.
+- Add the @wyverselabs/pinpoint/vite plugin to the renderer Vite config.
+- Wire the Electron main process with registerElectronPinpointMain() and toggleElectronPinpointForFocusedWindow().
+- Expose the preload bridge with exposeElectronPinpointPreload().
+- Install the renderer listener with installElectronPinpoint() in every renderer window entrypoint.
+- Keep all runtime hooks development-only so Pinpoint is inactive in production builds.
+
+Constraints:
+- Preserve this app's existing Electron lifecycle, shortcut system, and Vite config structure.
+- Do not rewrite unrelated app code.
+- Do not use Effect, generators, or yield unless this app already uses them in the surrounding integration point.
+- Use the app's existing package manager.
+- After editing, run the smallest relevant typecheck/build commands and summarize how Pinpoint is triggered.
+
+Reference package:
+- @wyverselabs/pinpoint
+- Vite import: import pinpoint from "@wyverselabs/pinpoint/vite"
+- Main import: import { DEFAULT_PINPOINT_ACCELERATOR, registerElectronPinpointMain, toggleElectronPinpointForFocusedWindow } from "@wyverselabs/pinpoint/electron/main"
+- Preload import: import { exposeElectronPinpointPreload } from "@wyverselabs/pinpoint/electron/preload"
+- Renderer import: import { installElectronPinpoint } from "@wyverselabs/pinpoint/electron/renderer"
+```
+
 ## 1. Add The Vite Plugin
 
 Add the plugin to your renderer build:
